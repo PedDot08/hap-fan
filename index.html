@@ -8,19 +8,6 @@
 </head>
 <body>
     
-    <div class="box">
-        <center>
-            <p style="color: palevioletred;">กดที่เค้กสิ!</p>
-            <div class="container">
-                <img src="cake.png" alt="image" width="50%" onclick="sendCard();">
-            </div>
-            <div class="mail">
-                <div id="text" style="color: palevioletred;"></div>
-                <img src="heart-love-mail-letter-icon-png.png" alt="image" width="120px" onclick="openMessage();">
-            </div>
-        </center>
-    </div>
-
     <div class="message">
         <div class="message-content">
             <span class="close-btn" onclick="closeMessage();">&times;</span>
@@ -41,23 +28,78 @@
         </div>
     </div>
     
+    <div class="box">
+        <center>
+            <div class="container" id="cakeContainer">
+                <p style="color: palevioletred;">กดที่เค้กสิ!</p>
+                <img src="cake.png" alt="image" width="50%" onclick="sendCard();">
+            </div>
+            <div class="mail">
+                <div id="text" style="color: palevioletred;"></div>
+                <img src="heart-love-mail-letter-icon-png.png" alt="image" width="120px" onclick="openMessage();">
+            </div>
+        </center>
+    </div>
+
+    
 </body>
 </html>
 
 <script>
+    let escapeCount = 0; // นับจำนวนครั้งที่กดแล้วจดหมายหนี
+    const maxEscapes = 4; // กำหนดให้หนีทั้งหมด 4 รอบ
+
     function sendCard() {
+        // สั่งให้เค้กเลื่อนลงมา
+        const cakeContainer = document.getElementById("cakeContainer");
+        cakeContainer.classList.add("open");
+
+        // สั่งให้จดหมายโผล่ขึ้นมา
         const mailElement = document.querySelector(".mail");
         mailElement.classList.add("open");
+        
         document.getElementById("text").innerHTML = "ลองกดเปิดจดหมายดูสิคะ 💌";
     }
 
     function openMessage() {
-        const messageElement = document.querySelector(".message");
-        messageElement.classList.add("open");
+        const mailImg = document.querySelector(".mail img");
+
+        // ถ้ายังหนีไม่ครบตามจำนวนที่กำหนด ให้สุ่มวิ่งหนี!
+        if (escapeCount < maxEscapes) {
+            escapeCount++;
+
+            // สุ่มตำแหน่งซ้าย-ขวา และ บน-ล่าง รอบๆ หน้าจอ
+            const randomX = (Math.random() - 0.5) * 200; // สุ่มซ้ายขวาในระยะ 200px
+            const randomY = (Math.random() - 0.5) * 150; // สุ่มบนล่างในระยะ 150px
+
+            // สั่งขยับตำแหน่งหนี
+            mailImg.style.transform = `translate(${randomX}px, ${randomY}px) scale(1.1)`;
+            
+            // เปลี่ยนข้อความกวนๆ แกล้งตอนกดไม่โดน
+            const wittyTexts = [
+                "อุ๊ย! กดไม่โดนหรอก แบร่ 😜",
+                "แน่จริงก็กดให้โดนสิคะคุณแฟน 555",
+                "หลบเก่งเกิน! ลองใหม่อีกรอบซิ 😏",
+                "ใกล้ละๆ เกือบโดนแล้ว..."
+            ];
+            document.getElementById("text").innerHTML = wittyTexts[escapeCount - 1];
+
+        } else {
+            // ครบกำหนดตามรอบที่ตั้งไว้ ยอมให้เปิดการ์ดแสดงความหวานได้!
+            mailImg.style.transform = "translate(0, 0) scale(1)"; // รีเซ็ตตำแหน่ง
+            const messageElement = document.querySelector(".message");
+            messageElement.classList.add("open");
+        }
     }
 
     function closeMessage() {
         const messageElement = document.querySelector(".message");
         messageElement.classList.remove("open");
+        
+        // รีเซ็ตค่าการหนีใหม่ เผื่อเค้าอยากกดเล่นรอบสอง
+        escapeCount = 0;
+        const mailImg = document.querySelector(".mail img");
+        mailImg.style.transform = "translate(0, 0) scale(1)";
+        document.getElementById("text").innerHTML = "ลองกดเปิดจดหมายดูสิคะ 💌";
     }
 </script>
