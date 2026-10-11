@@ -21,6 +21,15 @@ p {
 }
 .container {
     margin-top: 20px;
+    cursor: pointer;
+    transition: 0.8s ease; /* ทำให้เค้กเลื่อนลงมาแบบนุ่มนวล */
+}
+
+/* เมื่อ container มีคลาส open เค้กจะเลื่อนลงมาด้านล่าง 60px */
+.container.open {
+    transform: translateY(60px);
+    opacity: 0;
+    display: none;
 }
 .mail {
     z-index: -1;
